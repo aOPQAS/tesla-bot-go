@@ -3,9 +3,8 @@ package server
 import (
 	"net/http"
 
-	"github.com/BackendTigr/Backend2/internal/auth"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/tesla/tesla-bot-go/internal/auth"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -19,16 +18,48 @@ import (
 
 func (s *Server) Authenticate(c *fiber.Ctx) error {
 	type user struct {
-		Email string `json:"email"`
+		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 
 	var input user
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": fiber.ErrUnauthorized.Message,
 		})
 	}
 
-	student, err := s.Deps.PG.//cruds не сделан, сначала надо сделать cruds а потом писать auth
+	foundUser, err := s.Deps.PG.GetUserByEmail(input.Email)
+	if err != nil || foundUser == nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": fiber.ErrUnauthorized.Message,
+		})
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(input.Password))
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": fiber.ErrUnauthorized.Message,
+		})
+	}
+
+	accessToken, err := auth.GenerateAccessToken(foundUser.ID)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": fiber.ErrUnauthorized.Message,
+		})
+	}
+
+	refreshToken, err := auth.GenerateRefreshToken(foundUser.ID)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": fiber.ErrUnauthorized.Message,
+		})
+	}
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
+	})
+
 }

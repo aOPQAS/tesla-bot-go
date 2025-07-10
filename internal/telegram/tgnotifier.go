@@ -4,10 +4,6 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-// твой собственный бот
-// bot_token
-// твой собственный айди
-
 type TelegramNotifier struct {
 	bot  *tgbotapi.BotAPI
 	MyID int64
