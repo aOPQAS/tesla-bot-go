@@ -81,6 +81,67 @@ func (c *Client) DeleteUser(id string) error {
 	return nil
 }
 
+func (c *Client) GetTelegramUsers(telegramID int64) ([]models.TelegramUser, error) {
+	s := c.GetSession()
+	resp := []models.TelegramUser{}
+	stmt := s.Select("*").From("telegram_users")
+
+	if telegramID != 0 {
+		stmt = stmt.Where("telegram_id = ?", telegramID)
+	}
+
+	_, err := stmt.Load(&resp)
+	if err != nil {
+		return resp, fmt.Errorf("failed to get telegram user: %w", err)
+	}
+
+	return resp, nil
+}
+
+func (c *Client) CreateTelegramUsers(user models.TelegramUser) error {
+	s := c.GetSession()
+
+	stmt := s.InsertInto("telegram_users").Columns(
+		"telegram_id",
+		"user_id",
+	).Values(
+		user.TelegramID,
+		user.UserID,
+	)
+
+	if _, err := stmt.Exec(); err != nil {
+		return fmt.Errorf("failed to create telegram user: %w", err)
+	}
+
+	return nil
+}
+
+func (c *Client) UpdateTelegramUsers(user models.TelegramUser) error {
+	s := c.GetSession()
+
+	stmt := s.Update("telegram_users").SetMap(map[string]interface{}{
+		"user_id": user.UserID,
+	}).Where("telegram_id = ?", user.TelegramID)
+
+	if _, err := stmt.Exec(); err != nil {
+		return fmt.Errorf("failed to update telegram user: %w", err)
+	}
+
+	return nil
+}
+
+func (c *Client) DeleteTelegramUsers(telegramID int64) error {
+	s := c.GetSession()
+
+	stmt := s.DeleteFrom("telegram_users").Where("telegram_id = ?", telegramID)
+
+	if _, err := stmt.Exec(); err != nil {
+		return fmt.Errorf("failed to delete telegram user: %w", err)
+	}
+
+	return nil
+}
+
 func (c *Client) GetCars(ID string) ([]models.Car, error) {
 	s := c.GetSession()
 	resp := []models.Car{}

@@ -13,6 +13,11 @@ create table if not exists users (
     )
 );
 
+CREATE TABLE telegram_users (
+    telegram_id BIGINT PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES users (id)
+);
+
 create table if not exists cars (
     id uuid primary key,
     user_id uuid references users (id),

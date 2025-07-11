@@ -1,5 +1,7 @@
 drop table if exists users;
 
+drop table if exists telegram_users
+
 drop table if exists cars;
 
 drop table if exists token_pairs;

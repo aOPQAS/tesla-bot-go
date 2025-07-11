@@ -1,26 +1,22 @@
-# Tesla Bot Go
+### Tesla Bot Go
 
-Tesla Bot Go — это Telegram-бот и REST API для удалённого управления автомобилем Tesla. Проект разработан на языке Go с использованием фреймворка Fiber и PostgreSQL в качестве базы данных.
+Tesla Bot Go is a Telegram bot and REST API for remote control of a Tesla car. The project is developed in the Go language using the framework
+Fiber and PostgreSQL as a database.
 
-## Стек технологий
+## Technology stack
 
-- Go — основной язык программирования
-- Fiber — веб-фреймворк для REST API
-- PostgreSQL — СУБД для хранения данных
-- Telegram Bot API — для взаимодействия с пользователем
-- JWT (Access + Refresh) — аутентификация
-- Docker — контейнеризация и деплой
+- Go is the main programming language
+- Fiber — a web framework for the REST API
+- PostgreSQL database management system for data storage
+- Telegram Bot API — for user interaction
+- JWT (Access + Refresh) — authentication
+- Docker containerization and deployment
 
-## Возможности
+## Features
 
-- Аутентификация через Telegram
-- Генерация и обновление JWT-токенов
-- Управление функциями Tesla через REST и Telegram
-- Разделение на API и Telegram-бот
-- Безопасное хранение refresh-токенов в базе данных
+- Authentication via Telegram
+- Generation and updating of JWT tokens
+- Control of Tesla functions via REST and Telegram
+- Separation into API and Telegram bot
+- Secure storage of refresh tokens in the database
 
-## Запуск проекта
-
-1. Клонируйте репозиторий
-   git clone https://github.com/yourusername/tesla-bot-go.git
-   cd tesla-bot-go

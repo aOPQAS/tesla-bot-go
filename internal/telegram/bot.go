@@ -1,1 +1,1 @@
-package tgnotifier
+package telegram
